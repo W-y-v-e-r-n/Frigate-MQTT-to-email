@@ -46,18 +46,19 @@ mqtt-email-project/
 - Frigate server for event detection
 
 ## Environment Variables
+
 Ensure you have the following environment variables set in the docker-compose.yml file for mqtt-to-email and email-listener services:
 
-MQTT_BROKER: The MQTT broker address
-MQTT_PORT: The MQTT broker port (default: 1883)
-MQTT_TOPIC: The MQTT topic to subscribe to
-EMAIL_ADDRESS: Your Gmail address
-EMAIL_PASSWORD: Your Gmail password
-EMAIL_RECIPIENT: The recipient email address
-FRIGATE_HOST: The Frigate server host
-FRIGATE_PORT: The Frigate server port (default: 5001)
-EVENT_TYPE: Comma-separated list of event types to filter (e.g., person,cat)
-CAMERAS: Comma-separated list of cameras to filter (e.g., Front,Back,Door) or "ALL" for all cameras
+- **MQTT_BROKER**: The MQTT broker address
+- **MQTT_PORT**: The MQTT broker port (default: 1883)
+- **MQTT_TOPIC**: The MQTT topic to subscribe to
+- **EMAIL_ADDRESS**: Your Gmail address
+- **EMAIL_PASSWORD**: Your Gmail password
+- **EMAIL_RECIPIENT**: The recipient email address
+- **FRIGATE_HOST**: The Frigate server host
+- **FRIGATE_PORT**: The Frigate server port (default: 5001)
+- **EVENT_TYPE**: Comma-separated list of event types to filter (e.g., person, cat)
+- **CAMERAS**: Comma-separated list of cameras to filter (e.g., Front, Back, Door) or "ALL" for all cameras
 
 ## Functions
 
