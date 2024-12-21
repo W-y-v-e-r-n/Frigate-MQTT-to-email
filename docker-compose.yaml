@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  mqtt-to-email:
+    build: .
+    container_name: mqtt-to-email
+    networks:
+      - mqtt-broker_mqtt-network
+    environment:
+      EMAIL_ADDRESS: detectnvr@gmail.com
+      EMAIL_PASSWORD: hkzdvyfwqkovvodv
+      EMAIL_RECIPIENT: balint.feher@gmail.com
+      MQTT_BROKER: mqtt-broker
+      MQTT_PORT: 1883
+      MQTT_TOPIC: frigate/events
+      FRIGATE_HOST: 192.168.10.11
+      FRIGATE_PORT: 5001
+      EVENT_TYPE: person     #person,car,cat
+      CAMERAS: ALL #list of cameras as defined in Frigate, like: Front,Back,Door. Or ALL for every camera
+      LOG_LEVEL: DEBUG
+
+  email-listener:
+    build:
+      context: ../email-listener
+    container_name: email-listener
+    networks:
+      - mqtt-broker_mqtt-network
+    environment:
+      EMAIL_ADDRESS: detectnvr@gmail.com
+      EMAIL_PASSWORD: hkzdvyfwqkovvodv
+      EMAIL_RECIPIENT: balint.feher@gmail.com
+      FRIGATE_HOST: 192.168.10.11
+      FRIGATE_PORT: 5001
+      LOG_LEVEL: DEBUG
+
+networks:
+  mqtt-broker_mqtt-network:
+    external: true
