@@ -30,6 +30,7 @@ mqtt-email-project/
 ├── README.md
 ├── LICENSE
 └── docker-compose.yml
+```
 
 ## Features
 
@@ -55,7 +56,8 @@ EMAIL_PASSWORD: Your Gmail password
 EMAIL_RECIPIENT: The recipient email address
 FRIGATE_HOST: The Frigate server host
 FRIGATE_PORT: The Frigate server port (default: 5001)
-EVENT_TYPE: The type of event to filter for (e.g., person)
+EVENT_TYPE: Comma-separated list of event types to filter (e.g., person,cat)
+CAMERAS: Comma-separated list of cameras to filter (e.g., Front,Back,Door) or "ALL" for all cameras
 
 ## Functions
 
