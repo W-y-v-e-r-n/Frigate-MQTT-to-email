@@ -1,0 +1,69 @@
+version: '3'
+
+services:
+  mqtt-broker:
+    image: eclipse-mosquitto:latest
+    container_name: mqtt-broker
+    networks:
+      - mqtt-network
+    ports:
+      - "1883:1883"       # Expose MQTT port for external access
+      - "9001:9001"       # Optional: Expose WebSocket port
+    environment:
+      - message-expiry-interval=60
+    volumes:
+      - /config/mosquitto/config:/mosquitto/config
+      - /config/mosquitto/data:/mosquitto/data
+      - /config/mosquitto/log:/mosquitto/log
+    restart: unless-stopped
+
+services:
+  mqtt-to-email:
+    build: ./mqtt-to-email
+    container_name: mqtt-to-email
+    networks:
+      - mqtt-broker_mqtt-network
+    environment:
+      EMAIL_ADDRESS: <sender>@gmail.com
+      EMAIL_PASSWORD: <sender.api.key>
+      EMAIL_RECIPIENT: <recipient>@gmail.com
+      MQTT_BROKER: mqtt-broker
+      MQTT_PORT: 1883
+      MQTT_TOPIC: frigate/events
+      FRIGATE_HOST: <Frigate host IP>
+      FRIGATE_PORT: 5001
+      EVENT_TYPE: person     # person, car, cat
+      CAMERAS: ALL # list of cameras as defined in Frigate, like: Front, Back, Door. Or ALL for every camera
+      LOG_LEVEL: DEBUG
+
+  email-listener:
+    build:
+      context: ./email-listener
+    container_name: email-listener
+    networks:
+      - mqtt-broker_mqtt-network
+    environment:
+      EMAIL_ADDRESS: <sender>@gmail.com
+      EMAIL_PASSWORD: <sender.api.key>
+      EMAIL_RECIPIENT: <recipient>@gmail.com
+      FRIGATE_HOST: <Frigate host IP>
+      FRIGATE_PORT: 5001
+      LOG_LEVEL: DEBUG
+
+  scheduler-web-server:
+    build: ./scheduler-web-server
+    container_name: scheduler_web_server
+    networks:
+      - mqtt-broker_mqtt-network
+    environment:
+      LOG_LEVEL: DEBUG
+      MQTT_BROKER: mqtt-broker
+      MQTT_PORT: 1883
+    ports:
+      - "5000:5000"
+    restart: always
+
+networks:
+  mqtt-network:
+    driver: bridge
+    external: true
